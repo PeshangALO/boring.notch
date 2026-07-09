@@ -18,16 +18,14 @@ concurrency:
 
 jobs:
   build:
-    runs-on: macos-latest
+    # Runs on the self-hosted ARM64 Mac runner (uses its installed Xcode/toolchain).
+    runs-on: [self-hosted, macOS, ARM64]
     steps:
       - uses: actions/checkout@v4
         with:
           # Need write access + full history to commit the version bump back.
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
-
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode.app
 
       - name: Bump patch version
         id: version
