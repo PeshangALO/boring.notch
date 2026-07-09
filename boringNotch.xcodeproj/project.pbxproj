@@ -113,6 +113,7 @@
 		5A4F44933DB7BB5FC2973A42 /* CalendarLiveActivityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9788252DC836E0862D508F1A /* CalendarLiveActivityViewModel.swift */; };
 		9A0887322C7A693000C160EA /* TabButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A0887312C7A693000C160EA /* TabButton.swift */; };
 		9A0887352C7AFF8E00C160EA /* TabSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A0887342C7AFF8E00C160EA /* TabSelectionView.swift */; };
+		9A6671B353C7A448AF4CDC17 /* PrivateUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB87012B56C58FFDEC751309 /* PrivateUpdater.swift */; };
 		9A987A0D2C73CA66005CA465 /* ShelfView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A987A032C73CA66005CA465 /* ShelfView.swift */; };
 		9A987A102C73CA8D005CA465 /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 9A987A0F2C73CA8D005CA465 /* Collections */; };
 		9AB0C6BD2C73C9CB00F7CD30 /* NotchHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AB0C6BB2C73C9CB00F7CD30 /* NotchHomeView.swift */; };
@@ -311,6 +312,7 @@
 		B1F0A0012E60000100000001 /* BrightnessManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrightnessManager.swift; sourceTree = "<group>"; };
 		B1F747F82EC7E94000F841DB /* LottieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LottieView.swift; sourceTree = "<group>"; };
 		B1FEB4982C7686630066EBBC /* PanGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanGesture.swift; sourceTree = "<group>"; };
+		BB87012B56C58FFDEC751309 /* PrivateUpdater.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PrivateUpdater.swift; sourceTree = "<group>"; };
 		C23987FB54A652BC377ABACE /* CalendarLiveActivity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CalendarLiveActivity.swift; sourceTree = "<group>"; };
 		F38DE6472D8243E2008B5C6D /* BatteryActivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatteryActivityManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -544,6 +546,7 @@
 				B1F0A0012E60000100000001 /* BrightnessManager.swift */,
 				59D8C23B2E589FAA00147B33 /* VolumeManager.swift */,
 				9788252DC836E0862D508F1A /* CalendarLiveActivityViewModel.swift */,
+				BB87012B56C58FFDEC751309 /* PrivateUpdater.swift */,
 			);
 			path = managers;
 			sourceTree = "<group>";
@@ -1047,6 +1050,7 @@
 				B1F0A0022E60000100000001 /* BrightnessManager.swift in Sources */,
 				5A4F44933DB7BB5FC2973A42 /* CalendarLiveActivityViewModel.swift in Sources */,
 				BC7A14A5CCACDBA5F5CB82B9 /* CalendarLiveActivity.swift in Sources */,
+				9A6671B353C7A448AF4CDC17 /* PrivateUpdater.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

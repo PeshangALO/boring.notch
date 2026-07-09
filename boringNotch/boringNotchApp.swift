@@ -36,7 +36,9 @@ struct DynamicNotchApp: App {
                 }
             }
             .keyboardShortcut(KeyEquivalent(","), modifiers: .command)
-            CheckForUpdatesView(updater: updaterController.updater)
+            Button("Check for Updates…") {
+                PrivateUpdater.shared.checkForUpdates()
+            }
             Divider()
             Button("Restart Boring Notch") {
                 ApplicationRelauncher.restart()
