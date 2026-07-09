@@ -15,18 +15,15 @@ struct CalendarLiveActivityRing: View {
     var body: some View {
         ZStack {
             Circle()
-                .stroke(Color.gray.opacity(0.25), lineWidth: 2)
+                .stroke(Color.red.opacity(0.25), lineWidth: 4)
             Circle()
                 .trim(from: 0, to: progress)
                 .stroke(
-                    Color.accentColor,
-                    style: StrokeStyle(lineWidth: 2, lineCap: .round)
+                    Color.red,
+                    style: StrokeStyle(lineWidth: 4, lineCap: .round)
                 )
                 .rotationEffect(.degrees(-90))
                 .animation(.easeInOut(duration: 0.3), value: progress)
-            Image(systemName: "calendar")
-                .font(.system(size: size * 0.4, weight: .medium))
-                .foregroundStyle(.gray)
         }
         .frame(width: size, height: size)
     }
