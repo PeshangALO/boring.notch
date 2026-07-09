@@ -29,17 +29,59 @@ final class MediaKeyInterceptor {
     private var runLoopSource: CFRunLoopSource?
     private let step: Float = 1.0 / 16.0
     private var audioPlayer: AVAudioPlayer?
-    
+    private var authMonitorTask: Task<Void, Never>?
+    private var lastKnownAuthorization: Bool?
+
     private init() {}
     
-    // MARK: - Accessibility (via XPC)
-    
-    func requestAccessibilityAuthorization() {
-        XPCHelperClient.shared.requestAccessibilityAuthorization()
+    // MARK: - Accessibility
+    // ponytail: checked in THIS (main-app) process. The event tap below is created
+    // here too, so this is the process TCC actually evaluates — the XPC helper has a
+    // different code identity and its AXIsProcessTrusted() never matches the grant.
+
+    func isAccessibilityAuthorized() -> Bool {
+        AXIsProcessTrusted()
     }
-    
+
+    func requestAccessibilityAuthorization() {
+        let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
+        _ = AXIsProcessTrustedWithOptions(options)
+    }
+
     func ensureAccessibilityAuthorization(promptIfNeeded: Bool = false) async -> Bool {
-        await XPCHelperClient.shared.ensureAccessibilityAuthorization(promptIfNeeded: promptIfNeeded)
+        if AXIsProcessTrusted() { return true }
+        if promptIfNeeded {
+            requestAccessibilityAuthorization()
+            // Give the user a moment to respond to the system prompt.
+            try? await Task.sleep(for: .milliseconds(500))
+        }
+        return AXIsProcessTrusted()
+    }
+
+    /// Poll trust state and post `.accessibilityAuthorizationChanged` on change,
+    /// so Settings can enable the HUD toggle the moment the user grants access.
+    func startMonitoringAccessibilityAuthorization(every interval: TimeInterval = 1.0) {
+        stopMonitoringAccessibilityAuthorization()
+        authMonitorTask = Task { @MainActor [weak self] in
+            while !Task.isCancelled {
+                guard let self else { return }
+                let granted = self.isAccessibilityAuthorized()
+                if self.lastKnownAuthorization != granted {
+                    self.lastKnownAuthorization = granted
+                    NotificationCenter.default.post(
+                        name: .accessibilityAuthorizationChanged,
+                        object: nil,
+                        userInfo: ["granted": granted]
+                    )
+                }
+                try? await Task.sleep(for: .seconds(interval))
+            }
+        }
+    }
+
+    func stopMonitoringAccessibilityAuthorization() {
+        authMonitorTask?.cancel()
+        authMonitorTask = nil
     }
     
     // MARK: - Event Tap
@@ -54,7 +96,7 @@ final class MediaKeyInterceptor {
         }
         
         // Check accessibility authorization
-        let authorized = await XPCHelperClient.shared.isAccessibilityAuthorized()
+        let authorized = isAccessibilityAuthorized()
         if !authorized {
             if promptIfNeeded {
                 let granted = await ensureAccessibilityAuthorization(promptIfNeeded: true)

@@ -157,6 +157,6 @@ struct OnboardingView: View {
     }
     
     func requestAccessibilityPermission() async {
-        await XPCHelperClient.shared.ensureAccessibilityAuthorization(promptIfNeeded: true)
+        _ = await MediaKeyInterceptor.shared.ensureAccessibilityAuthorization(promptIfNeeded: true)
     }
 }
