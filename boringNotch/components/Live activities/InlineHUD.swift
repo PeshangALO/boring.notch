@@ -77,7 +77,7 @@ struct InlineHUD: View {
                         .frame(maxWidth: .infinity, alignment: .trailing)
                         .contentTransition(.interpolate)
                 } else {
-                        HStack {
+                        HStack(spacing: 6) {
                         DraggableProgressBar(value: $value, onChange: { v in
                             if type == .volume {
                                 VolumeManager.shared.setAbsolute(Float32(v))
@@ -85,6 +85,7 @@ struct InlineHUD: View {
                                 BrightnessManager.shared.setAbsolute(value: Float32(v))
                             }
                         })
+                        .frame(width: 60) // ponytail: compact bar like the native HUD; number sits beside it
                         if (type == .volume && value.isZero) {
                             Text("muted")
                                 .font(.caption)
@@ -93,10 +94,12 @@ struct InlineHUD: View {
                                 .lineLimit(1)
                                 .allowsTightening(true)
                                 .multilineTextAlignment(.trailing)
-                        } else if Defaults[.showClosedNotchHUDPercentage] {
-                            Text("\(Int(value * 100))%")
+                        } else {
+                            // Raw 0–100 value like the native macOS HUD (19, not 19%).
+                            Text("\(Int((value * 100).rounded()))")
                                 .font(.caption)
                                 .fontWeight(.medium)
+                                .monospacedDigit()
                                 .foregroundStyle(.gray)
                                 .lineLimit(1)
                                 .allowsTightening(true)
@@ -140,7 +143,7 @@ struct InlineHUD: View {
     func Type2Name(_ type: SneakContentType) -> String {
         switch(type) {
             case .volume:
-                return "Volume"
+                return "Sound"
             case .brightness:
                 return "Brightness"
             case .backlight:
