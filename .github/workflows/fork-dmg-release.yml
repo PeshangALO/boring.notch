@@ -1,0 +1,65 @@
+name: Build DMG and Release (fork)
+
+# Builds an unsigned .dmg on every push to main and publishes it as a dated
+# GitHub Release, so the README download button always points at the newest build.
+# Fork-only convenience flow; independent of the upstream signed release workflow.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fork-dmg-release
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app
+
+      - name: Build Release app
+        run: |
+          xcodebuild -project boringNotch.xcodeproj -scheme boringNotch \
+            -configuration Release -destination 'platform=macOS' \
+            -derivedDataPath build CODE_SIGNING_ALLOWED=NO build
+
+      - name: Install dmgbuild
+        run: python3 -m pip install --require-hashes -r Configuration/dmg/requirements.txt
+
+      - name: Create DMG
+        run: |
+          mkdir -p dist
+          Configuration/dmg/create_dmg.sh \
+            build/Build/Products/Release/boringNotch.app \
+            dist/boringNotch.dmg "Boring Notch"
+
+      - name: Compute release tag
+        id: tag
+        run: |
+          DATE=$(date +'%Y.%m.%d')
+          TAG="v${DATE}"
+          # If a release for today already exists, suffix the run number.
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            TAG="v${DATE}-${GITHUB_RUN_NUMBER}"
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish release
+        run: |
+          gh release create "${{ steps.tag.outputs.tag }}" \
+            dist/boringNotch.dmg \
+            --title "${{ steps.tag.outputs.tag }}" \
+            --notes "Automated build from ${GITHUB_SHA:0:7} on $(date +'%Y-%m-%d')." \
+            --latest
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
