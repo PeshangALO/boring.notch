@@ -522,10 +522,11 @@ struct ContentView: View {
     /// calendar icon on the left, countdown ring on the right.
     func CalendarOnlyLiveActivity() -> some View {
         HStack {
-            Image(systemName: "calendar")
+            Image(systemName: "calendar.badge.clock")
                 .resizable()
                 .scaledToFit()
-                .foregroundStyle(.gray)
+                .symbolRenderingMode(.hierarchical)
+                .foregroundStyle(.red)
                 .frame(
                     width: max(0, vm.effectiveClosedNotchHeight - 16),
                     height: max(0, vm.effectiveClosedNotchHeight - 16)
