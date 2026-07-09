@@ -508,7 +508,7 @@ struct ContentView: View {
             if calendarActivityActive {
                 CalendarLiveActivityRing(
                     progress: calendarActivity.progress,
-                    size: max(0, vm.effectiveClosedNotchHeight - 18)
+                    size: max(0, vm.effectiveClosedNotchHeight - 24)
                 )
             }
         }
@@ -528,8 +528,8 @@ struct ContentView: View {
                 .symbolRenderingMode(.hierarchical)
                 .foregroundStyle(.red)
                 .frame(
-                    width: max(0, vm.effectiveClosedNotchHeight - 18),
-                    height: max(0, vm.effectiveClosedNotchHeight - 18)
+                    width: max(0, vm.effectiveClosedNotchHeight - 24),
+                    height: max(0, vm.effectiveClosedNotchHeight - 24)
                 )
 
             Rectangle()
@@ -538,7 +538,7 @@ struct ContentView: View {
 
             CalendarLiveActivityRing(
                 progress: calendarActivity.progress,
-                size: max(0, vm.effectiveClosedNotchHeight - 18)
+                size: max(0, vm.effectiveClosedNotchHeight - 24)
             )
         }
         .frame(height: vm.effectiveClosedNotchHeight, alignment: .center)
