@@ -52,4 +52,8 @@ build/
 *.ipa
 *.xcarchive
 *.dSYM
+dist/
 
+
+# Local dmg build output
+boringNotch.dmg
