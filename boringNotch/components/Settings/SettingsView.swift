@@ -373,9 +373,7 @@ struct Charge: View {
             }
         }
         .onAppear {
-            Task { @MainActor in
-                await XPCHelperClient.shared.isAccessibilityAuthorized()
-            }
+            _ = MediaKeyInterceptor.shared.isAccessibilityAuthorized()
         }
         .accentColor(.effectiveAccent)
         .navigationTitle("Battery")
@@ -499,7 +497,7 @@ struct HUD: View {
 
                         HStack(spacing: 12) {
                             Button("Request Accessibility") {
-                                XPCHelperClient.shared.requestAccessibilityAuthorization()
+                                MediaKeyInterceptor.shared.requestAccessibilityAuthorization()
                             }
                             .buttonStyle(.borderedProminent)
                         }
@@ -575,13 +573,13 @@ struct HUD: View {
         .accentColor(.effectiveAccent)
         .navigationTitle("HUDs")
         .task {
-            accessibilityAuthorized = await XPCHelperClient.shared.isAccessibilityAuthorized()
+            accessibilityAuthorized = MediaKeyInterceptor.shared.isAccessibilityAuthorized()
         }
         .onAppear {
-            XPCHelperClient.shared.startMonitoringAccessibilityAuthorization()
+            MediaKeyInterceptor.shared.startMonitoringAccessibilityAuthorization()
         }
         .onDisappear {
-            XPCHelperClient.shared.stopMonitoringAccessibilityAuthorization()
+            MediaKeyInterceptor.shared.stopMonitoringAccessibilityAuthorization()
         }
         .onReceive(NotificationCenter.default.publisher(for: .accessibilityAuthorizationChanged)) { notification in
             if let granted = notification.userInfo?["granted"] as? Bool {

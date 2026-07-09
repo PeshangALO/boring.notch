@@ -147,7 +147,7 @@ class BoringViewCoordinator: ObservableObject {
 
                     if change.newValue {
                         self.hudEnableTask = Task { @MainActor in
-                            let granted = await XPCHelperClient.shared.ensureAccessibilityAuthorization(promptIfNeeded: true)
+                            let granted = await MediaKeyInterceptor.shared.ensureAccessibilityAuthorization(promptIfNeeded: true)
                             if Task.isCancelled { return }
 
                             if granted {
@@ -166,7 +166,7 @@ class BoringViewCoordinator: ObservableObject {
             helloAnimationRunning = firstLaunch
 
             if Defaults[.hudReplacement] {
-                let authorized = await XPCHelperClient.shared.isAccessibilityAuthorized()
+                let authorized = MediaKeyInterceptor.shared.isAccessibilityAuthorized()
                 if !authorized {
                     Defaults[.hudReplacement] = false
                 } else {
