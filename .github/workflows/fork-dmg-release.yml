@@ -32,14 +32,18 @@ jobs:
             -derivedDataPath build CODE_SIGNING_ALLOWED=NO build
 
       - name: Install dmgbuild
-        run: python3 -m pip install --require-hashes -r Configuration/dmg/requirements.txt
+        run: |
+          python3 -m venv .dmgvenv
+          .dmgvenv/bin/pip install --require-hashes -r Configuration/dmg/requirements.txt
 
       - name: Create DMG
         run: |
           mkdir -p dist
-          Configuration/dmg/create_dmg.sh \
-            build/Build/Products/Release/boringNotch.app \
-            dist/boringNotch.dmg "Boring Notch"
+          # create_dmg.sh finds dmgbuild on PATH.
+          PATH="$PWD/.dmgvenv/bin:$PATH" \
+            Configuration/dmg/create_dmg.sh \
+              build/Build/Products/Release/boringNotch.app \
+              dist/boringNotch.dmg "Boring Notch"
 
       - name: Compute release tag
         id: tag
